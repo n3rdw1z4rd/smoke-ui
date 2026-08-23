@@ -15,10 +15,7 @@ a full Vite + TypeScript scaffold, already wired up, with a working counter
 example:
 
 ```bash
-cp -r templates/basic my-app
-cd my-app
-npm install
-npm run dev
+npm create @n3rdw1z4rd/smoke-ui
 ```
 
 ## Manual setup (existing project)
