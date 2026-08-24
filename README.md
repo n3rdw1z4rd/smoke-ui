@@ -50,13 +50,6 @@ still needs to be set by hand:
 }
 ```
 
-> **Why isn't tsconfig automated too?** Vite plugins can programmatically
-> merge into Vite's own config because Vite exposes a `config()` hook for
-> exactly that. `tsc` and editor language servers have no equivalent —
-> they read `tsconfig.json` off disk before any package code runs, so
-> nothing at runtime can reach in and set it. The template above sidesteps
-> this by shipping a working `tsconfig.json` already in place.
-
 ## Usage
 
 ```tsx
