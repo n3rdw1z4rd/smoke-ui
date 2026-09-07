@@ -1,6 +1,6 @@
 import { Signal } from "./signal";
 
-type ComponentFn = (props: any) => Node;
+export type ComponentFn = (props: any) => Node;
 
 function applyStyle(el: HTMLElement, styleProps: Record<string, any>) {
     for (const key in styleProps) {
