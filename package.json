@@ -1,6 +1,6 @@
 {
     "name": "@n3rdw1z4rd/smoke-ui",
-    "version": "0.1.1",
+    "version": "0.2.0",
     "description": "A tiny JSX runtime with fine-grained signal-based reactivity — no virtual DOM, no diffing, direct handles into real state.",
     "type": "module",
     "main": "./dist/index.js",
