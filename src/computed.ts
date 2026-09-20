@@ -1,16 +1,20 @@
 import { Signal } from "./signal";
 import { track } from "./tracking";
 
-export function computed<T>(calc: () => T): Signal<T> {
-    const result = new Signal<T>(undefined as T);
+export type ComputedSignal<T> = Signal<T> & { dispose(): void };
+
+export function computed<T>(calc: () => T): ComputedSignal<T> {
+    const result = new Signal<T>(undefined as T) as ComputedSignal<T>;
     let unsubscribers: (() => void)[] = [];
+    let disposed = false;
 
     const recompute = () => {
+        if (disposed) return;
+
         unsubscribers.forEach((unsub) => unsub());
         unsubscribers = [];
 
         let value!: T;
-
         const deps = track(() => {
             value = calc();
         });
@@ -33,7 +37,12 @@ export function computed<T>(calc: () => T): Signal<T> {
         result.set(value);
     };
 
-    recompute();
+    result.dispose = () => {
+        disposed = true;
+        unsubscribers.forEach((unsub) => unsub());
+        unsubscribers = [];
+    };
 
+    recompute();
     return result;
 }

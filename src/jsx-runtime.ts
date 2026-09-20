@@ -1,3 +1,4 @@
+import { onCleanup } from "./cleanup";
 import { Signal } from "./signal";
 
 export type ComponentFn = (props: any) => Node;
@@ -7,9 +8,11 @@ function applyStyle(el: HTMLElement, styleProps: Record<string, any>) {
         const value = styleProps[key];
 
         if (value instanceof Signal) {
-            value.subscribe((next) => {
+            const unsubscribe = value.subscribe((next) => {
                 (el.style as any)[key] = next;
             });
+
+            onCleanup(el, unsubscribe);
             continue;
         }
 
@@ -19,8 +22,9 @@ function applyStyle(el: HTMLElement, styleProps: Record<string, any>) {
 
 function applyProp(el: HTMLElement, key: string, value: any) {
     if (value instanceof Signal) {
-        value.subscribe((next) => applyProp(el, key, next));
+        const unsubscribe = value.subscribe((next) => applyProp(el, key, next));
 
+        onCleanup(el, unsubscribe);
         return;
     }
 
@@ -28,19 +32,16 @@ function applyProp(el: HTMLElement, key: string, value: any) {
         const eventName = key.slice(2).toLowerCase();
 
         el.addEventListener(eventName, value);
-
         return;
     }
 
     if (key === "className") {
         el.setAttribute("class", value);
-
         return;
     }
 
     if (key === "style" && typeof value === "object" && value !== null) {
         applyStyle(el, value);
-
         return;
     }
 
@@ -48,7 +49,6 @@ function applyProp(el: HTMLElement, key: string, value: any) {
 
     if (propKeys.has(key)) {
         (el as any)[key] = value;
-
         return;
     }
 
@@ -58,19 +58,17 @@ function applyProp(el: HTMLElement, key: string, value: any) {
 function appendChild(el: Element | DocumentFragment, child: any) {
     if (Array.isArray(child)) {
         child.forEach((c) => appendChild(el, c));
-
         return;
     }
 
     if (child instanceof Signal) {
         const textNode = document.createTextNode(String(child.get()));
-
-        child.subscribe((next) => {
+        const unsubscribe = child.subscribe((next) => {
             textNode.textContent = String(next);
         });
 
+        onCleanup(textNode, unsubscribe);
         el.append(textNode);
-
         return;
     }
 
