@@ -1,6 +1,6 @@
 {
     "name": "@n3rdw1z4rd/smoke-ui",
-    "version": "0.3.0",
+    "version": "0.3.1",
     "description": "A tiny JSX runtime with fine-grained signal-based reactivity — no virtual DOM, no diffing, direct handles into real state.",
     "type": "module",
     "main": "./dist/index.js",
@@ -29,7 +29,8 @@
     ],
     "scripts": {
         "build": "tsc -p tsconfig.json",
-        "clean": "rm -rf dist"
+        "clean": "rm -rf dist",
+        "prepack": "npm run clean && npm run build"
     },
     "keywords": [
         "jsx",
